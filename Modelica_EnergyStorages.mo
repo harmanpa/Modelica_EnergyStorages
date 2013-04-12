@@ -2113,10 +2113,6 @@ management systems, loads and charging devices.
           Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a heatPort
             annotation (Placement(transformation(extent={{-10,90},{10,110}})));
         equation
-          connect(n, n) annotation (Line(
-              points={{100,4.44089e-16},{100,4.44089e-16}},
-              color={0,0,255},
-              smooth=Smooth.None));
           connect(Resistor.p, p) annotation (Line(
               points={{-10,0},{-54,0},{-54,4.44089e-16},{-100,4.44089e-16}},
               color={0,0,255},
