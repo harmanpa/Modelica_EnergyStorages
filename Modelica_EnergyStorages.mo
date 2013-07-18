@@ -945,7 +945,7 @@ management systems, loads and charging devices.
 
         public
           Modelica.Thermal.HeatTransfer.Sources.FixedTemperature
-            fixedTemperature(                                                     final T=TOperational) if  not useHeatPort
+            fixedTemperature(final T=TOperational) if not useHeatPort
             annotation (Placement(transformation(
                 extent={{-10,-10},{10,10}},
                 rotation=90,
@@ -966,7 +966,7 @@ management systems, loads and charging devices.
                 extent={{4,-4},{-4,4}},
                 rotation=0,
                 origin={-24,24})));
-          final parameter Modelica.SIunits.Time tini(fixed=false)=0
+          final parameter Modelica.SIunits.Time tini(fixed=false)
             "Initial time";
         initial equation
           tini=time;
@@ -1049,7 +1049,7 @@ management systems, loads and charging devices.
           parameter Real SOCini(start=0.5) "Initial state of charge"
             annotation (Dialog(group="Initialization"));
           final parameter Modelica.SIunits.Resistance Z0=sum(cellParameters.RC.Rd.R0);
-          final parameter Modelica.SIunits.Time tini(fixed=false)=0
+          final parameter Modelica.SIunits.Time tini(fixed=false)
             "Initial time";
           Modelica.Electrical.Analog.Interfaces.NegativePin pin_n
             "Negative pin"
@@ -1351,7 +1351,7 @@ management systems, loads and charging devices.
             Modelica_EnergyStorages.Batteries.Components.OperationalParameters;
           parameter Real SOCini(start=0.5) "Initial state of charge"
             annotation (Dialog(group="Initialization"));
-          final parameter Modelica.SIunits.Time tini(fixed=false)=0
+          final parameter Modelica.SIunits.Time tini(fixed=false)
             "Initial time";
           Modelica_EnergyStorages.Sensors.CellMeasurement cellMeasurement
                             annotation (Placement(transformation(extent={{20,-20},
@@ -1575,7 +1575,7 @@ management systems, loads and charging devices.
             final fileName=cellParameters.SOCOCV.OCVfileName)
                                annotation (Placement(transformation(extent={{-70,-80},
                     {-50,-60}},         rotation=0)));
-         final parameter Modelica.SIunits.Time tini(fixed=false)=0
+         final parameter Modelica.SIunits.Time tini(fixed=false)
             "Initial time";
        initial equation
          tini=time;
@@ -1661,7 +1661,7 @@ management systems, loads and charging devices.
             "Enable/disable single cell terminals";
          parameter
             CellRecords.LinearDynamicImpedance.LinearDynamicImpedanceParameters
-            cellParameters[:,:]
+            cellParameters[:,:] = {{CellRecords.LinearDynamicImpedance.LinearDynamicImpedanceParameters()}};
            annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
          extends
             Modelica_EnergyStorages.Batteries.Components.OperationalParameters;
@@ -1914,7 +1914,7 @@ management systems, loads and charging devices.
             "Enable/disable single cell terminals";
           parameter
             CellRecords.LinearDynamicImpedance.LinearDynamicImpedanceParameters
-             cellParameters[:,:]
+             cellParameters[:,:] = {{CellRecords.LinearDynamicImpedance.LinearDynamicImpedanceParameters()}}
             annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
           extends
             Modelica_EnergyStorages.Batteries.Components.OperationalParameters;
@@ -2361,7 +2361,8 @@ management systems, loads and charging devices.
         model RCseriesLinear
           "Series connection of several linear dependent resistance and capacitance combinations"
           extends BasicImpedance;
-          parameter Modelica_EnergyStorages.CellRecords.Components.RCelement RC[:]
+          import Modelica_EnergyStorages.CellRecords.Components.RCelement;
+          parameter RCelement RC[:] = {RCelement()}
             "Transient response resistance and capacitance parameters";
           final parameter Integer num(min=1)=size(RC,1)
             "Number of serial RC elements";
@@ -2507,9 +2508,11 @@ management systems, loads and charging devices.
         end RCseriesLinear;
 
         model CellImpedance "Complete internal impedance of a battery cell"
-          parameter Modelica_EnergyStorages.CellRecords.Components.Resistance Rs
+          import Modelica_EnergyStorages.CellRecords.Components.Resistance;
+          import Modelica_EnergyStorages.CellRecords.Components.RCelement;
+          parameter Resistance Rs
             "Resistance parameters";
-          parameter Modelica_EnergyStorages.CellRecords.Components.RCelement RC[:]
+          parameter RCelement RC[:] = {RCelement()}
             "Transient response resistance and capacitance parameters";
 
           Modelica.Electrical.Analog.Interfaces.PositivePin pin_p
@@ -3485,7 +3488,7 @@ management systems, loads and charging devices.
         parameter Modelica_EnergyStorages.CellRecords.Components.Selfdischarge Isd
           "Self discharge parameters"
           annotation(Dialog(group="Advanced"));
-        parameter Modelica_EnergyStorages.CellRecords.Components.RCelement RC[:]
+        parameter Modelica_EnergyStorages.CellRecords.Components.RCelement RC[:] = {Modelica_EnergyStorages.CellRecords.Components.RCelement()}
           "Transient response resistance and capacitance parameters"
           annotation (Dialog(group="Advanced"));
       annotation(defaultComponentPrefixes="parameter", Icon(graphics={Text(
@@ -3552,7 +3555,7 @@ management systems, loads and charging devices.
 
       record ChargeCapacity "Combines the property of the charge capacity"
         extends Modelica.Icons.Record;
-        parameter Modelica.SIunits.ElectricCharge C0
+        parameter Modelica.SIunits.ElectricCharge C0 = 40*3600
           "Charge Capacity for SOC=0, t=0 and Qabs=0";
         parameter CellRecords.Components.Aging aging
           "Linear aging coefficients";
@@ -3563,7 +3566,7 @@ management systems, loads and charging devices.
 
       record TemperatureDependency "Combines temperature relevant properties"
         extends Modelica.Icons.Record;
-        parameter Modelica.SIunits.Temperature Tref=293.15
+        parameter Modelica.SIunits.Temperature Tref = 293.15
           "Reference temperature";
         parameter Modelica.SIunits.LinearTemperatureCoefficient alpha=0
           "Linear temperature coefficient";
@@ -3572,24 +3575,24 @@ management systems, loads and charging devices.
 
       record Aging "Combines the aging properties"
         extends Modelica.Icons.Record;
-        parameter Modelica.SIunits.ElectricCharge Qini=0
+        parameter Modelica.SIunits.ElectricCharge Qini = 0
           "Initial transferred charge";
-        parameter Modelica.SIunits.ChargeAging                        kQabs = 0
+        parameter Modelica.SIunits.ChargeAging kQabs = 0
           "Linear charge transfer aging coefficient";
-        parameter Modelica.SIunits.TimeAging                        kt = 0
+        parameter Modelica.SIunits.TimeAging kt = 0
           "Linear calendaric aging coefficient";
       annotation(defaultComponentPrefixes="parameter");
       end Aging;
 
       record SOCDependency "Combines SOC relevant properties"
         extends Modelica.Icons.Record;
-        parameter Real kSOC=0 "Linear SOC coefficient";
+        parameter Real kSOC = 0 "Linear SOC coefficient";
       annotation(defaultComponentPrefixes="parameter");
       end SOCDependency;
 
       record Selfdischarge "Combines the properties of the self discharge"
         extends Modelica.Icons.Record;
-        parameter Modelica.SIunits.Current Isd0=0
+        parameter Modelica.SIunits.Current Isd0 = 0
           "Self discharge current t=0 and Qabs=0";
         parameter CellRecords.Components.Aging aging
           "Linear aging coefficients";
@@ -3598,7 +3601,7 @@ management systems, loads and charging devices.
 
       record Resistance "Combines resistance relevant properties"
         extends Modelica.Icons.Record;
-        parameter Modelica.SIunits.Resistance R0
+        parameter Modelica.SIunits.Resistance R0 = 0.0001
           "Resistance for SOC=0, t=0 and Qabs=0";
         parameter CellRecords.Components.SOCDependency SOC
           "Linear SOC dependency";
@@ -3611,7 +3614,7 @@ management systems, loads and charging devices.
 
       record Capacitance "Combines capacitance relevant properties"
         extends Modelica.Icons.Record;
-        parameter Modelica.SIunits.Capacitance C0
+        parameter Modelica.SIunits.Capacitance C0 = 50000
           "Capacitance for SOC=0, t=0 and Qabs=0";
         parameter CellRecords.Components.SOCDependency SOC
           "Linear SOC dependency";
@@ -8069,8 +8072,7 @@ constructed by the signals connected to this bus.
             points={{-40,-8},{-40,-90}},
             color={0,0,127},
             smooth=Smooth.None));
-        annotation (Diagram(graphics),
-                             Icon(graphics={
+        annotation (Icon(graphics={
               Line(
                 points={{-80,0},{-54,0}},
                 color={0,0,0},
@@ -8197,8 +8199,7 @@ constructed by the signals connected to this bus.
             points={{40,-10},{40,-40},{0,-40},{0,-100}},
             color={0,0,255},
             smooth=Smooth.None));
-        annotation (Diagram(graphics),
-                             Icon(graphics={
+        annotation (Icon(graphics={
               Ellipse(extent={{-40,40},{40,-40}}, lineColor={0,0,0},
                 origin={0,2},
                 rotation=90),
